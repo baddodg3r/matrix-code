@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Matrix-Code Beispiel</title>
+    <style>
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+
+      canvas {
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="matrix-canvas"></canvas>
+    <script>
+      const canvas = document.getElementById("matrix-canvas");
+      const ctx = canvas.getContext("2d");
+
+      // Set font properties
+      const fontSize = 14;
+      const fontFamily = "Courier New";
+      const charSet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()_+[]\\;',./{}|:\"<>?`~";
+      // Set initial values for character raindrops
+      let drops = [];
+
+      // Function to update canvas size and raindrop positions
+      function updateCanvasSize() {
+        // Set canvas size to match window size
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        // Recalculate number of raindrop columns and reset raindrop positions
+        let columnCount = Math.ceil(canvas.width / fontSize);
+        drops = [];
+        for (let i = 0; i < columnCount; i++) {
+          drops[i] = -Math.round(Math.random() * canvas.height / fontSize) * fontSize;
+        }
+      }
+
+      // Call updateCanvasSize on initial page load
+      updateCanvasSize();
+
+      // Main animation loop
+      function draw() {
+        // Set canvas background color and fill
+        ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // Set font properties for raindrop characters
+        ctx.font = fontSize + "px " + fontFamily;
+        ctx.fillStyle = "#CCFF00";
+
+        // Draw raindrop characters
+        for (let i = 0; i < drops.length; i++) {
+          const charIndex = Math.floor(Math.random() * charSet.length);
+          const char = charSet[charIndex];
+          const x = i * fontSize;
+          const y = drops[i];
+          ctx.fillText(char, x, y);
+
+          // Move raindrop down
+          drops[i] += fontSize;
+
+          // Reset raindrop position if it reaches the bottom of the screen
+          if (drops[i] > canvas.height) {
+            drops[i] = -fontSize;
+          }
+        }
+      }
+
+      // Start animation loop
+      setInterval(draw, 50);
+
+      // Call updateCanvasSize when window is resized
+      window.addEventListener("resize", updateCanvasSize);
+    </script>
+  </body>
+</html>
